@@ -18,14 +18,21 @@ class ArticleDetail extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(
-          child: Column(
+          child: ListView(
             children: [
               Text(article.category,
                 style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: 8),
-              Text(article.content,
-                style: Theme.of(context).textTheme.bodyLarge),
-                const SizedBox(height: 8),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: article.content,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ]
+                )
+              ),
             ],
           ),
         ),

@@ -3,7 +3,15 @@ class Article {
   String category;
   String content;
   
-  Article(this.title, this.category, this.content, );
+  Article(this.title, this.category, this.content);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'category': category,
+      'content': content
+    };
+  }
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return switch (json) {

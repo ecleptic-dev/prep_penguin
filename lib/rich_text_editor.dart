@@ -23,24 +23,25 @@ class RichTextEditor extends StatelessWidget {
       shrinkWrap: true,
       children: [
         const QuillToolbar(),
-        Expanded(
-          child: QuillEditor.basic(
+        
+        QuillEditor.basic(
             configurations: const QuillEditorConfigurations(
               readOnly: false,
               minHeight: 200,
               maxHeight: 500
             ),
           ),
-        ),
+        
       ],
     ),
     );
   }
 
   getJsonDocument() {
-    return jsonEncode(_controller.document.toDelta().toJson());
+    return _controller.document.toDelta().toJson();
+    
 }
-fuck me
+
   void dispose() {
     _controller.dispose();
   }
