@@ -40,14 +40,11 @@ class CreateArticleState extends State<CreateArticlePage> {
   }
 
 Future<http.Response> createArticle(String title, String category, String content) async {
-  var article = Article(title, category, content);
-  debugPrint(jsonEncode(article));
   var articleDto = {
-  "title": title,
-  "category": category,
-  "content": content
-};
-  debugPrint(jsonEncode(articleDto));
+    "title": title,
+    "category": category,
+    "content": content
+  };
 
   final response = await http.post(
     Uri.parse('https://preppy-penguin-82.hasura.app/api/rest/articles'),
@@ -127,12 +124,6 @@ Future<http.Response> createArticle(String title, String category, String conten
                   if (_formKey.currentState!.validate()) {
                     // If the form is valid, display a snackbar. In the real world,
                     // you'd often call a server or save the information in a database.
-                    setState(() {
-                      title = controllerTitle.text;
-                      category = controllerCategory.text;
-                      content = RichTextEditor().getJsonDocument().toString();
-                      
-                    });
                     await createArticle(controllerTitle.text, controllerCategory.text, RichTextEditor().getJsonDocument().toString());  
                   }
                 },

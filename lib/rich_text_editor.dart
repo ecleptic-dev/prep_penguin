@@ -10,8 +10,6 @@ class RichTextEditor extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    
-
     return QuillProvider(
       configurations: QuillConfigurations(
         controller: _controller,
@@ -28,21 +26,23 @@ class RichTextEditor extends StatelessWidget {
             configurations: const QuillEditorConfigurations(
               readOnly: false,
               minHeight: 200,
-              maxHeight: 500
+              maxHeight: 500,
+              showCursor: true,
+              )
             ),
-          ),
-        
       ],
     ),
     );
   }
 
-  getJsonDocument() {
-    return _controller.document.toDelta().toJson();
-    
+String getJsonDocument() {
+  var delta = _controller.document.toDelta().toJson();
+  debugPrint(jsonEncode(delta));
+  return jsonEncode(delta);
 }
 
   void dispose() {
     _controller.dispose();
   }
 }
+
