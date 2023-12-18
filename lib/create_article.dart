@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:prepping_penguin/article_model.dart';
 import 'package:prepping_penguin/main.dart';
-import 'package:prepping_penguin/rich_text_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,12 +28,14 @@ class CreateArticleState extends State<CreateArticlePage> {
   String content = '';
   final controllerTitle = TextEditingController();
   final controllerCategory = TextEditingController();
+  final controllerContent = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     controllerTitle.dispose();
     controllerCategory.dispose();
+    controllerContent.dispose();
     super.dispose();
   }
 
@@ -115,7 +115,22 @@ Future<http.Response> createArticle(String title, String category, String conten
                 return null;
               },
             ),
-            RichTextEditor(),
+            TextFormField(
+              controller: controllerContent,
+              decoration: const InputDecoration(labelText: 'Content'),
+              keyboardType: TextInputType.multiline,
+              maxLines: 500,
+              minLines: 1,
+              maxLength: 35000,
+              // The validator receives the text that the user has entered.
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Content';
+                }
+                return null;
+              }
+            ),
+            //RichTextEditor(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ElevatedButton(
@@ -124,7 +139,7 @@ Future<http.Response> createArticle(String title, String category, String conten
                   if (_formKey.currentState!.validate()) {
                     // If the form is valid, display a snackbar. In the real world,
                     // you'd often call a server or save the information in a database.
-                    await createArticle(controllerTitle.text, controllerCategory.text, RichTextEditor().getJsonDocument().toString());  
+                    await createArticle(controllerTitle.text, controllerCategory.text, controllerContent.text);// RichTextEditor().getJsonDocument());  
                   }
                 },
                 child: const Text('Create Article'),
