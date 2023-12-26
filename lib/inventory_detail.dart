@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prepping_penguin/edit_inventory.dart';
 import 'package:prepping_penguin/inventory_model.dart';
 
 class InventoryDetail extends StatelessWidget {
@@ -32,6 +33,22 @@ class InventoryDetail extends StatelessWidget {
                   ]
                 )
               ),
+              Text(
+                inventory.expiration,
+              ),
+              const SizedBox(height: 8),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // go to edit
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditInventoryPage(inventoryItem: inventory),
+                    )
+                  );
+                }
+              ),              
             ],
           ),
         ),

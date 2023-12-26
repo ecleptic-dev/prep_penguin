@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:prepping_penguin/inventory.dart';
 import 'package:prepping_penguin/inventory_model.dart';
 import 'package:prepping_penguin/main.dart';
 import 'package:provider/provider.dart';
@@ -135,7 +134,7 @@ void createInventory(String name, String quantity, String description, String ex
                     // If the form is valid, display a snackbar. In the real world,
                     // you'd often call a server or save the information in a database.
                     createInventory(controllerName.text, controllerQuantity.text, controllerDescription.text,  controllerExpiration.text);
-                    Navigator.popAndPushNamed(context, '/' );
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Add Inventory Item'),

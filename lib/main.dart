@@ -24,7 +24,6 @@ Future<void> main() async {
   Hive.registerAdapter<Inventory>(InventoryAdapter());
   await Hive.initFlutter();  
   Hive.init(path);
-
   
   Hive.openLazyBox<Inventory>('inventory');
   
@@ -72,8 +71,11 @@ class MyAppState extends ChangeNotifier {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required String title});
-  
+    
   String get title => "Prepping Penguin";
+  set title(String value) {
+      title = value;
+  }
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -81,6 +83,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  String title = 'Prepping Penguin';
+  
   static const List<Widget> _widgetOptions = <Widget>[
     // replace with pages
     InjuryTreatmentPage(),
@@ -97,13 +101,19 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    }); 
+  }
+
+  setTitle(String value) {
+    setState(() {
+      title = value;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(title: Text(title)),
       body: Center(
         child: _widgetOptions[_selectedIndex],
       ),
@@ -128,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(0);
+                setTitle('Injury Treatment');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -138,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(1);
+                setTitle('Disaster Supplies');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -148,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(2);
+                setTitle('Inventory');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -158,6 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(3);
+                setTitle('Medical Supplies');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -168,6 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(4);
+                setTitle('Settings');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -178,6 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(5);
+                setTitle('Shelter Search');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -188,6 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(6);
+                setTitle('Skills');
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -197,6 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
               selected: _selectedIndex == 7,
               onTap: () {
                 _onItemTapped(7);
+                setTitle('Articles');
                 Navigator.pop(context);
               }
             ),
@@ -205,6 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
               selected: _selectedIndex == 8,
               onTap: () {
                 _onItemTapped(8);
+                setTitle('Create Article');
                 Navigator.pop(context);
               }
             )

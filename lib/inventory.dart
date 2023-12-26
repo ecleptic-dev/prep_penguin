@@ -13,7 +13,7 @@ class InventoryPage extends StatefulWidget {
 
 class _InventoryPageState extends State<InventoryPage> {
   
-  List<Inventory> _items = [];
+  final List<Inventory> _items = [];
 
   @override
   void initState() {
@@ -22,7 +22,7 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 
 // Get all items from the database
-  Future<void> _refreshItems() async {
+  Future<List<Inventory>> _refreshItems() async {
     LazyBox<Inventory> invBox = Hive.lazyBox('inventory');
     debugPrint('got Box');
     invBox.isEmpty ? debugPrint('box is empty') : debugPrint('box is not empty');
@@ -32,44 +32,70 @@ class _InventoryPageState extends State<InventoryPage> {
         invBox.isOpen ? debugPrint('box is open') : debugPrint('box is closed');
         var inventoryItem = await invBox.getAt(i);
         debugPrint(inventoryItem!.name);
-        inventoryItem == null ? debugPrint('inv item is null') : debugPrint('inv item is not null');
-        inventoryItem == null ? null : _items.add(inventoryItem);
+        _items.add(inventoryItem);
         debugPrint('added item');
         debugPrint(_items.length.toString());
-        debugPrint(_items.first.name);
       }
-      debugPrint('first element name: ');
-      debugPrint(_items.first.name);
     }
+    return _items;
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
-    
-      if(_items.isNotEmpty) {
-        return ListView.builder(
-        //shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: _items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(_items[index].name),
-            subtitle: Text("${_items[index].quantity} ${_items[index].expiration}"),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-            Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => InventoryDetail(inventory: _items[index]),
-            ),
-          );
+    return 
+    FutureBuilder<List<Inventory>>(
+      future: _refreshItems(),
+      builder: (context, snapshot) {
+        if(snapshot.data == null || snapshot.data!.isEmpty) {
+          debugPrint('empty');
+          return const CircularProgressIndicator();
         }
-        );
-      },
-    );
-    } else {
-      return 
-        const AddInventoryPage();
-    }
-  }
+        else if (snapshot.hasData) {
+          return 
+          Scaffold(
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddInventoryPage(),
+                      )
+                    );
+                  }
+                ),
+              ]
+            ),
+            body: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(snapshot.data![index].name),
+                subtitle: Text(snapshot.data![index].expiration),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.push(
+                  context,
+                    MaterialPageRoute(
+                      builder: (context) => InventoryDetail(inventory: _items[index]),
+                    ),
+                  );
+                }
+              );
+              },
+            ),
+          );          
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+    // By default, show a loading spinner.
+    return const CircularProgressIndicator();
+  },
+);  
+}
 }
