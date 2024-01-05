@@ -48,7 +48,7 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (context, snapshot) {
         if(snapshot.data == null || snapshot.data!.isEmpty) {
           debugPrint('empty');
-          return const CircularProgressIndicator();
+          return const AddInventoryPage();
         }
         else if (snapshot.hasData) {
           return 
