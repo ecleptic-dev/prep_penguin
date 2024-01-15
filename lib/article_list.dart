@@ -42,7 +42,15 @@ class ArticleList extends StatelessWidget {
     }
 
     // By default, show a loading spinner.
-    return const CircularProgressIndicator();
+    return Container(
+        width: 24,
+        height: 24,
+        child: const CircularProgressIndicator(
+        color: Colors.blue,
+        strokeWidth: 2.0,
+        semanticsLabel: 'Getting Articles...'
+      ),
+    );
   },
 );  
 }

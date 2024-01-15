@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:prepping_penguin/article_list.dart';
+import 'package:prepping_penguin/article_list_page.dart';
+import 'package:prepping_penguin/inventory.dart';
 import 'package:prepping_penguin/main.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -29,6 +32,7 @@ class CreateArticleState extends State<CreateArticlePage> {
   final controllerTitle = TextEditingController();
   final controllerCategory = TextEditingController();
   final controllerContent = TextEditingController();
+  bool loading = false;
 
   @override
   void dispose() {
@@ -38,6 +42,20 @@ class CreateArticleState extends State<CreateArticlePage> {
     controllerContent.dispose();
     super.dispose();
   }
+
+_onSubmit() async {
+  setState(() => loading = true);
+
+  if (_formKey.currentState!.validate()) {
+   // If the form is valid, display a snackbar. In the real world,
+   // you'd often call a server or save the information in a database.
+   var res = await createArticle(controllerTitle.text, controllerCategory.text, controllerContent.text);
+   if (res.statusCode == 200) {
+    // ignore: use_build_context_synchronously
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const ArticleListPage()));
+  } 
+  }
+}
 
 Future<http.Response> createArticle(String title, String category, String content) async {
   var articleDto = {
@@ -79,9 +97,6 @@ Future<http.Response> createArticle(String title, String category, String conten
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Article'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(
@@ -133,27 +148,32 @@ Future<http.Response> createArticle(String title, String category, String conten
             //RichTextEditor(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Validate returns true if the form is valid, or false otherwise.
-                  if (_formKey.currentState!.validate()) {
-                    // If the form is valid, display a snackbar. In the real world,
-                    // you'd often call a server or save the information in a database.
-                    await createArticle(controllerTitle.text, controllerCategory.text, controllerContent.text);// RichTextEditor().getJsonDocument());  
-                  }
-                },
-                child: const Text('Create Article'),
-              ),
+              child: 
+              ElevatedButton.icon(
+                onPressed: loading ? null : _onSubmit,
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16.0)),
+                icon: loading ? Container(
+                  width: 24,
+                  height: 24,
+                  padding: const EdgeInsets.all(2.0),
+                  child: const CircularProgressIndicator(
+                    color: Colors.blue,
+                    strokeWidth: 3,
+                  ),
+                ) : const Icon(Icons.feedback),
+                label: const Text('Save'),
+            ),
             ),
           ],
         ),
       ),
-      ),
     ),
+              ),
             ],
           ),
         ),
       ),
-    ); 
+    );
   }
 }
+

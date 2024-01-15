@@ -18,11 +18,13 @@ class ArticleState extends State<ArticleListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ArticleList(
-                title: title,
-                category: category,
-                content: content
-              );
+    return Material(
+      child: ArticleList(
+                  title: title,
+                  category: category,
+                  content: content
+                ),
+    );
   }
 
 }
